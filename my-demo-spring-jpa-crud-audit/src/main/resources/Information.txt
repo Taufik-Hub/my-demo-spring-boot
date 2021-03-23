@@ -1,0 +1,3 @@
+Information:
+src/main/resource
+src/main/webapp
