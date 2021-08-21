@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-			<!-- <scope>test</scope>  to work app aplication DB not test DB -->
+			<!-- <scope>test</scope> removed as want to use application databse-->
 		</dependency>
 		<dependency>
 			<groupId>io.projectreactor</groupId>
