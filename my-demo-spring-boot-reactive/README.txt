@@ -24,20 +24,20 @@ GET: http://localhost:8080/actuator/info
 GET: http://localhost:8080/actuator/health
 POST: http://localhost:8085/actuator/shutdown
 
-        <!--actuator/info git commit details-->
-		<dependency>
-			<groupId>pl.project13.maven</groupId>
-			<artifactId>git-commit-id-plugin</artifactId>
-		</dependency>
-		<!--actuator/info git commit details-->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+<plugin>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-maven-plugin</artifactId>
+	<!--actuator/info git commit details-->
+	<executions>
+		<execution>
+			<goals>
+				<goal>build-info</goal>
+			</goals>
+		</execution>
+	</executions>
+</plugin>
+<!--actuator/info git commit details-->
+<plugin>
+	<groupId>pl.project13.maven</groupId>
+	<artifactId>git-commit-id-plugin</artifactId>
+</plugin>
