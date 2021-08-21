@@ -36,5 +36,5 @@ public class UserDetails {
 		return "UserDetails [userId=" + userId + ", userName=" + userName + ", userDepartment=" + userDepartment
 				+ ", userSalary=" + userSalary + "]";
 	}
-	
+
 }

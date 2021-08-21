@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.taufik.kafka.producer.main.model.UserDetails;
 
-
 @RestController
 @RequestMapping(value = "kafka")
 public class KafkaProducerController {
@@ -21,20 +20,20 @@ public class KafkaProducerController {
 	 * KafkaTemplate<String, String> kafkaTemplate; - topic and message are in
 	 * string so no need to serialize and config
 	 */
-	//	@Autowired
-	//	KafkaTemplate<String, String> kafkaTemplate;
-	//	
-	//	@GetMapping(value="/publish/{messageName}")
-	//	public String publishTopic(@PathVariable ("messageName") String message) {
-	//		kafkaTemplate.send(TOPIC, message);
-	//		return "Topic : " + TOPIC + " publsh sucessfully with message : " + message;
-	//	}
+	// @Autowired
+	// KafkaTemplate<String, String> kafkaTemplate;
+	//
+	// @GetMapping(value="/publish/{messageName}")
+	// public String publishTopic(@PathVariable ("messageName") String message) {
+	// kafkaTemplate.send(TOPIC, message);
+	// return "Topic : " + TOPIC + " publsh sucessfully with message : " + message;
+	// }
 
 	/**
-	 * KafkaTemplate<String, UserDetails> kafkaTemplate; - 
-	 * need to config for serialization - check KafkaProducerConfig
+	 * KafkaTemplate<String, UserDetails> kafkaTemplate; - need to config for
+	 * serialization - check KafkaProducerConfig
 	 */
-	
+
 	@Autowired
 	KafkaTemplate<String, UserDetails> kafkaTemplate;
 

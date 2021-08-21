@@ -6,7 +6,7 @@ public class UserDetails {
 	String userName;
 	String userDepartment;
 	Integer userSalary;
-	
+
 	public UserDetails() {
 		super();
 	}
@@ -40,5 +40,5 @@ public class UserDetails {
 		return "UserDetails [userId=" + userId + ", userName=" + userName + ", userDepartment=" + userDepartment
 				+ ", userSalary=" + userSalary + "]";
 	}
-	
+
 }

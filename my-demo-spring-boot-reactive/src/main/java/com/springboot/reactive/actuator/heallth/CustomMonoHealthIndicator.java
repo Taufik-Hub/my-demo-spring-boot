@@ -20,7 +20,6 @@ public class CustomMonoHealthIndicator extends MongoReactiveHealthIndicator {//
     @Override
     protected Mono<Health> doHealthCheck(Health.Builder builder) {//
         Mono<Document> buildInfo = this.reactiveMongoTemplate.executeCommand("{ buildInfo: 1 }");//
-        System.out.println("######3"+buildInfo);//
         return buildInfo.map((document) -> up(builder, document));//
     }
 
