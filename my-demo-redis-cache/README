@@ -1,0 +1,11 @@
+Start redis by redis-server
+GET http://localhost:9092/redis-chache/user/
+GET http://localhost:9092/redis-chache/user/2000001
+POST http://localhost:9092/redis-chache/user/
+
+ {
+ 	 "userId": 2000001,
+ 	 "userName": "Shaha",
+     "userSalary": 200000,
+     "userDepartment": "USER_ADMIN"
+}

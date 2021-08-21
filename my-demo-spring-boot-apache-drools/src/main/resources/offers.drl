@@ -1,0 +1,26 @@
+package KieRule; 
+import my.demo.spring.boot.apache.drools.model.OrderDetails;
+
+rule "HDFC"
+
+when 
+	orderData: OrderDetails(cardType=="HDFC" && orderPrice>=1500)
+then
+	orderData.setDiscountInPercentage(10d);
+end;
+
+rule "ICICI"
+
+when 
+	orderData: OrderDetails(cardType=="ICICI" && orderPrice>=1500)
+then
+	orderData.setDiscountInPercentage(15d);
+end;
+
+rule "SBI"
+
+when 
+	orderData: OrderDetails(cardType=="SBI" && orderPrice>=1500)
+then
+	orderData.setDiscountInPercentage(8d);
+end;

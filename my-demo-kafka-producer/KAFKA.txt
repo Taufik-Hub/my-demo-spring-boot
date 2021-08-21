@@ -1,0 +1,207 @@
+KAFKA:
+
+jdk 8 download and install         .exe file   java -version
+apache-kafka download and install  .gz file
+
+
+	open source made by linkedIn
+	distibuted
+	high-performance(latency)
+	scalable
+	faulttaulerant
+	resilient
+	publisher-subscriber design pattern 
+
+	
+Use Cases:	
+	-Data move and process very faster
+	
+	-messaging system
+	 stream processing
+	 activity tracking
+	 integration with Big Data
+	 gathering metric from many locations
+	 application logs gathering
+	 decoupled system dependency - microservice
+		
+
+Core-Part	
+	Source-system -> target-system
+		different protocol
+		diffrent data format
+		different load
+	data-streams
+	events
+Kafka
+kafka-cluster
+ - distributed nature can be achived by using broker
+ - data is not stored in single broker it is distributed among them, if one broker is  down then another broker serve data
+ - replication factor -> usually between 2 and 3 -> 3 is standard -> (topic-partition) have 3 replicals in broker
+ - replication factor=2 means 2 copy of data in different broker
+   here u can see in example each (topic-partition) have 2 replication factor/2 copies in different in broker so if one broker is down other broker wll serve in that case
+ - Borker-101 (Topics-A Partition-2)	(Topics-A Partition-1)
+   Borker-102 (Topics-A Partition-0)	(Topics-B Partition-0) 	(Topics-A Partition-2)
+   Borker-103 (Topics-A Partition-1)    (Topics-A Partition-2)  (Topics-A Partition-0)
+		
+	
+	Borker (kafka-broker)	
+	 - broker have id
+	 - each broker is running server
+	  - Kafka-broker-discovery 
+		 - every kafka broker is bootstrap server
+				Means you only need to connect to one broker(anyone)
+				and it will connected to the entire cluster
+		- each broker knows about all brokers, topics, partitions(metadata-data of data) does not means it hold all data
+		- Consmers and producers use this meta data to become/work smarter way  
+		- this will done internally/behind the scene by kafka
+	 
+	 - topics is distibuted across broker RANDOMLY and AUTOMATICALLY
+	 - broker only hold diffrent (topic-partition) in deistibuted way
+	 - we can customize how many broker we want 
+	 - Ex. Borker-101 (Topics-A Partition-2)
+		   Borker-102 (Topics-A Partition-0)	(Topics-B Partition-0)
+		   Borker-103 (Topics-A Partition-1)
+		   
+		- Topics(Stream of data/table in db) 
+		   - topics has name 
+		   - topics further splits in partitions
+				- Partitions
+					-partitions are ordered
+					-offset - each message in partition gets and incremental and unique id called as offset
+					- data is in ordered form		
+					- offset id cannot change
+					- data in offset is immutable(cannot swap or update)
+					- data is provided randomly to partition by default
+					- data kept for limited time by default 1 week
+					Ex. Topics-A
+							Partition-0    offset-0 offset-1
+							Partition-1    offset-0 offset-1 offset-2 offset-3
+							Partition-2    offset-0 
+								ex. Borker-101 Topics-A partition-1 offset-3  read data
+							
+							Ex. truck_gps(position of truck) - Each truck will send message to kafka topic truck_gps in every 20 seconds - latitude and laongitute	
+									truck-1  	message-0 message-1     every 20 seconds
+	  Kafka Garantees 
+		 - ORDER of READ/WRITE PRODUCE/CONSUMER is very important aspect of kafka  efficient working garantee
+		 - When Replication factor is N, Producer and Consmers can tolerate upto N-1 broker being down 							
+									
+				
+Poducers
+	- producer will write data to topic
+	- producer will decide which broker and partition to write - round robbin
+	- In case of brker failure,  producer will automatically recover
+	- will provide load balancing between broker
+	- producer receive acknoledgement
+		LEADER and REPLICA acknoledgement
+		acks = 0 -> possible data loss -> producer will not wait for acknoledgement
+		acks = 1 default -> limited data loss -> producer will wait for leader acknoledgement
+		acks = all  -> no data loss -> both leader and replica acknoledgement
+	- message key 
+		String/number any
+		mechanism - key hashing
+		if key=null then data send to round robbin to choose partition
+		if key is present then message sent to same partition
+		Ex. data of key=truck_id_123 always go to partition-0
+			in key-hashing if id is same then we can say that data will go to same bucket
+Consumers	
+	- consumer read data from topic
+	- consumer will automatically know which broker to read from
+	- incase of broker failure consumer will know how to recover same as producer
+	- data read INORDER, WITHIN EACH PARTITION-offset.
+	- read data from multiple partition paralley in any order (IN SAME ORDER WITHIN EACH PARTITION)
+	- consumer-group will read from multiple partitions
+	- In consumer group, number of partition =  number of active consumer 
+	
+	Consumers_offset	
+		- till what id reading is completed
+		- checkpoint/bookmark till which offset consumer complete consuming/reading	
+		- <topic_name>_consumer_offset  
+		- when consumer in a group has processed data received from kafka it should commit the offset
+		- if consumer dies it will be able to read back from where it left off thanks to the commited consumer offset
+	consumers Delevery Semantics	
+		- consumer will choose when to send offset
+		-  * At-most-once (not preffered)  -> commit as sson as message received
+		   * At-least-once (preffered)  -> commit after message process successfully
+		   * Exactly once (kafka-to-kafka communication) -> using kafka stream
+					Idempotent_consumer -> Kafka-to-db to remove duplicates
+		
+zookeeper
+	kafka cannot work without zookeeper
+	One zookeepers is leader (write) and rest Zookeeper servers are follwers (read)
+	zookeepers holds and manages broker
+	zookeeper send notifications to kafka in case of any changes in broker/topic
+	zookeeper by design operates with odd number of server (3, 5, 7)
+	zookeeper is completely isolated from Consumers-Producer (i.e doesnot hold any offset)
+	
+	Zookeeper -> Kafka -> Brokers -> Consumers/Producer
+
+	
+	
+==============================================================================================
+# Kafka-producer
+all auto config for kafka producer
+	acks = 1
+	batch.size = 16384
+	bootstrap.servers = [localhost:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = default
+	client.id = producer-1
+	compression.type = none
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = false
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.class = class org.apache.kafka.clients.producer.internals.DefaultPartitioner
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.mechanism = GSSAPI
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2]
+	ssl.endpoint.identification.algorithm = https
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.2
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+==============================================================================================
