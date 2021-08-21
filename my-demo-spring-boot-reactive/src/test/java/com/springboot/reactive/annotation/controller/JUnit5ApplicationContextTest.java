@@ -1,9 +1,8 @@
 package com.springboot.reactive.annotation.controller;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
+import com.springboot.reactive.model.Product;
+import com.springboot.reactive.model.ProductEvent;
+import com.springboot.reactive.repository.ProductReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,42 +13,41 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
-import com.springboot.reactive.model.Product;
-import com.springboot.reactive.model.ProductEvent;
-import com.springboot.reactive.repository.ProductReactiveRepository;
-
 import reactor.test.StepVerifier;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class JUnit5ApplicationContextTest {
-    private WebTestClient client;
+public class JUnit5ApplicationContextTest {//
 
-    private List<Product> expectedList;
+    private WebTestClient client;//
 
-    @Autowired
-    private ProductReactiveRepository repository;
+    private List<Product> expectedList;//
 
-    @Autowired
-    private ApplicationContext context;
+    @Autowired//
+    private ProductReactiveRepository repository;//
+
+    @Autowired//
+    private ApplicationContext context;//
     
-    /**Everything is same in ProductApiAnnotationApplicationTests, JUnit5ControllerTest, JUnit5ApplicationContextTest
+    /**
+     * Everything is same in ProductApiAnnotationApplicationTests, JUnit5ControllerTest, JUnit5ApplicationContextTest
      * Here only we created WebTestClient using Application context inside @BeforeEach and @Autowired ApplicationContext
      * */
 
-    @BeforeEach
-    void beforeEach() {
-        this.client =
-                WebTestClient
-                        .bindToApplicationContext(context)
-                        .configureClient()
-                        .baseUrl("/products")
-                        .build();
+    @BeforeEach//
+    void beforeEach() {//
+        this.client = WebTestClient//
+                        .bindToApplicationContext(context)//
+                        .configureClient()//
+                        .baseUrl("/products")//
+                        .build();//
 
-        this.expectedList =
-                repository.findAll().collectList().block();
-    }
+        this.expectedList = repository.findAll().collectList().block();//
+    }//
 
     @Test
     void testGetAllProducts() {

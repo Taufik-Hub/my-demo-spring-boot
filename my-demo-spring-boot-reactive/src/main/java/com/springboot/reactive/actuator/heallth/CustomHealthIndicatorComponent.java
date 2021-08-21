@@ -13,11 +13,10 @@ public class CustomHealthIndicatorComponent extends AbstractReactiveHealthIndica
      * If you throw an exception, the status will be DOWN with the exception message.
      * */
     @Override
-    protected Mono<Health> doHealthCheck(Health.Builder builder){
-    System.out.println("@@@@@@@@@@@");
-        return Mono.just(builder.up()
-                .withDetail("application", "I am Alive")
-                .withDetail("error", "Nothing!")
-                .build());
+    protected Mono<Health> doHealthCheck(Health.Builder builder){//
+        return Mono.just(builder.up()//
+                .withDetail("application", "I am Alive")//
+                .withDetail("error", "Nothing!")//
+                .build());//
     }
 }

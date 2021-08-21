@@ -27,24 +27,24 @@ public class WebClientApi {
 	 * .bodyToMono(Employee.class)//bodyToFlux(Employee.class)*/
 
 	private static final String BASE_URL = "http://localhost:8085/products";
-	private WebClient webClient = WebClient
-										.builder()
-										.baseUrl(BASE_URL)
-										.build();
+	private WebClient webClient = WebClient//
+										.builder()//
+										.baseUrl(BASE_URL)//
+										.build();//
 
-	public static void main(String[] args) {
-		WebClientApi webClientApi = new WebClientApi();
-		webClientApi
-				.createNewProduct()
-				.thenMany(webClientApi.getAllProducts())
-				.take(1)
-				.flatMap(pro -> webClientApi.updateProductById(pro.getId(), new Product(pro.getId(), "Rasmalai", 22.99)))
-				.flatMap(pro -> webClientApi.deleteProductById(pro.getId())).thenMany(webClientApi.getAllProducts())
-				.thenMany(webClientApi.getAllEvents()).subscribe(System.out::println);
+	public static void main(String[] args) {//
+		WebClientApi webClientApi = new WebClientApi();//
+		webClientApi//
+				.createNewProduct()//
+				.thenMany(webClientApi.getAllProducts())//
+				.take(1)//
+				.flatMap(pro -> webClientApi.updateProductById(pro.getId(), new Product(pro.getId(), "Rasmalai", 22.99)))//
+				.flatMap(pro -> webClientApi.deleteProductById(pro.getId())).thenMany(webClientApi.getAllProducts())//
+				.thenMany(webClientApi.getAllEvents()).subscribe(System.out::println);//
 
 	}
 
-	public Mono<ResponseEntity<Product>> createNewProduct() {
+	public Mono<ResponseEntity<Product>> createNewProduct() {//
 		return webClient
 					.post()//
 					.body(Mono.just(new Product(null, "Gulab Jamun", 12.99)), Product.class)//
@@ -63,30 +63,30 @@ public class WebClientApi {
 					.doOnNext(res -> LOGGER.info("success : response : {}", res));
 	}
 
-	public Mono<Product> updateProductById(String id, Product product) {
-		return webClient
-					.put().uri("/{id}", id)
-					.body(Mono.just(new Product(null, product.getName(), product.getPrice())), Product.class)
-					.retrieve()
-					.bodyToMono(Product.class)
+	public Mono<Product> updateProductById(String id, Product product) {//
+		return webClient//
+					.put().uri("/{id}", id)//
+					.body(Mono.just(new Product(null, product.getName(), product.getPrice())), Product.class)//
+					.retrieve()//
+					.bodyToMono(Product.class)//
 					.doOnError(ex -> LOGGER.info("error : response : {}", ex.getMessage()))//
 					.doOnSuccess(res -> LOGGER.info("success : response : {}", res));//
 	}
 
-	public Mono<Void> deleteProductById(String id) {
-		return webClient
-					.delete().uri("/{id}", id)
-					.retrieve()
-					.bodyToMono(Void.class)
+	public Mono<Void> deleteProductById(String id) {//
+		return webClient//
+					.delete().uri("/{id}", id)//
+					.retrieve()//
+					.bodyToMono(Void.class)//
 					.doOnError(ex -> LOGGER.info("error : response : {}", ex.getMessage()))//
 					.doOnSuccess(res -> LOGGER.info("success : response : {}", res));//
 	}
 
-	public Mono<Void> getAllEvents() {
-		return webClient
-					.delete().uri("/events")
-					.retrieve()
-					.bodyToMono(Void.class)
+	public Mono<Void> getAllEvents() {//
+		return webClient//
+					.delete().uri("/events")//
+					.retrieve()//
+					.bodyToMono(Void.class)//
 					.doOnError(ex -> LOGGER.info("error : response : {}", ex.getMessage()))//
 					.doOnSuccess(res -> LOGGER.info("success : response : {}", res));//
 	}

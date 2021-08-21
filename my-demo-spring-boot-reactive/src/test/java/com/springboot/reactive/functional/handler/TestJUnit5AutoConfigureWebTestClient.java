@@ -25,6 +25,7 @@ import reactor.test.StepVerifier;
 @SpringBootTest
 @AutoConfigureWebTestClient
 public class TestJUnit5AutoConfigureWebTestClient {
+
 	@Autowired
 	private WebTestClient client;
 
@@ -35,35 +36,50 @@ public class TestJUnit5AutoConfigureWebTestClient {
 
 	@BeforeEach
 	void beforeEach() {
-		this.expectedList = repository.findAll().collectList().block();
-		this.client = this.client.mutate().baseUrl("/products").build();
+		this.expectedList = repository.findAll().collectList().block();//
+		this.client = this.client.mutate().baseUrl("/products").build();//
 	}
 
 	@Test
-	void testGetAllProducts() {
-		client.get().uri("/").exchange().expectStatus().isOk().expectBodyList(Product.class).isEqualTo(expectedList);
-	}
+	void testGetAllProducts() {//
+		client.get()//
+				.uri("/")//
+				.exchange()//
+				.expectStatus().isOk()//
+				.expectBodyList(Product.class).isEqualTo(expectedList);//
+	}//
 
 	@Test
-	void testProductInvalidIdNotFound() {
-		client.get().uri("/aaa").exchange().expectStatus().isNotFound();
-	}
+	void testProductInvalidIdNotFound() {//
+		client.get()//
+				.uri("/aaa")//
+				.exchange()//
+				.expectStatus().isNotFound();//
+	}//
 
 	@Test
-	void testProductIdFound() {
-		Product expectedProduct = expectedList.get(0);
-		client.get().uri("/{id}", expectedProduct.getId()).exchange().expectStatus().isOk().expectBody(Product.class)
-				.isEqualTo(expectedProduct);
-	}
+	void testProductIdFound() {//
+		Product expectedProduct = expectedList.get(0);//
+		client.get().uri("/{id}", expectedProduct.getId()).exchange().expectStatus().isOk().expectBody(Product.class)//
+				.isEqualTo(expectedProduct);//
+	}//
 
 	@Test
-	void testProductEvents() {
-		FluxExchangeResult<ProductEvent> result = client.get().uri("/events").accept(MediaType.TEXT_EVENT_STREAM)
-				.exchange().expectStatus().isOk().returnResult(ProductEvent.class);
+	void testProductEvents() {//
+		ProductEvent expectedEvent = new ProductEvent(0L, "Product Event");//
 
-		ProductEvent expectedEvent = new ProductEvent(0L, "Product Event");
+		FluxExchangeResult<ProductEvent> result = client.get()//
+														.uri("/events")//
+														.accept(MediaType.TEXT_EVENT_STREAM)//
+														.exchange()//
+														.expectStatus().isOk()//
+														.returnResult(ProductEvent.class);//
 
-		StepVerifier.create(result.getResponseBody()).expectNext(expectedEvent).expectNextCount(2)
-				.consumeNextWith(event -> assertEquals(Long.valueOf(3), event.getEventId())).thenCancel().verify();
+		StepVerifier//
+				.create(result.getResponseBody())//
+				.expectNext(expectedEvent).expectNextCount(2)//
+				.consumeNextWith(event -> assertEquals(Long.valueOf(3), event.getEventId()))//
+				.thenCancel()//
+				.verify();//
 	}
 }
